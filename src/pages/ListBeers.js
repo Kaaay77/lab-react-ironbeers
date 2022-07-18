@@ -7,16 +7,20 @@ import Nav from "../assets/nav.png"
 
 export default function ListBeers() {
 const [beer, setBeer] = useState([])
+const [fetching, setFetching] = useState(false);
+
 
  useEffect(() =>{
      Axios
      .get("https://ih-beers-api2.herokuapp.com/beers")
      .then((response) => {
          setBeer(response.data)
+         setFetching(true)
      })
 
  }, [])
-    return(
+    return(fetching ? (
+
         <div className="content">
             <nav>
                 <Link to="/" >
@@ -25,22 +29,25 @@ const [beer, setBeer] = useState([])
             </nav>
             {beer.map((birra) => {
                 return(
-                    <div className="beerCard">
+                    <div className="beerCard" key={birra.id}>
 
-                    <Link to={`/beers/${birra._id}`} className="beerCard" style={{ textDecoration: "none" }}>
-                    <div className="beerCardImg">
-                            <img src={birra.image_url} alt="birraIMG"></img>
-                       <div className="details">
-                            <h3>{birra.name}</h3> 
-                            <h4>{birra.tagline}</h4>
-                            <p>{birra.contributed_by}</p>
-                       </div>
-                    </div>
+                        <Link to={`/beers/${birra._id}`} style={{ textDecoration: "none" }}>
+                            <div className="beerCardImg">
+                                        <img src={birra.image_url} alt=""></img>
+                                <div className="details">
+                                        <h3>{birra.name}</h3> 
+                                        <h4>{birra.tagline}</h4>
+                                        <p>{birra.contributed_by}</p>
+                                </div>
+                            </div>
                     </Link>
                     </div>
                 )
             })}
 
         </div>
+            ):(
+                <div>Cargando</div>
+            )
     )
 }
